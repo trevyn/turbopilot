@@ -33,7 +33,17 @@
         "title": "Do some refactoring",
         "category": "Cat Coding"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Creatrix",
+      "properties": {
+        "creatrix.openaiApiKey": {
+          "title": "OpenAI API Key",
+          "description": "Your Codex-enabled OpenAI API Key",
+          "type": "string"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
