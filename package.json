@@ -2,7 +2,7 @@
   "name": "cat-coding",
   "description": "Cat Coding - A Webview API Sample",
   "version": "0.0.1",
-  "publisher": "vscode-samples",
+  "publisher": "turbofoundation",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -16,22 +16,22 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:catCoding.start",
-    "onCommand:catCoding.doRefactor",
+    "onCommand:turbopilot.start",
+    "onCommand:turbopilot.doRefactor",
     "onWebviewPanel:catCoding"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "catCoding.start",
-        "title": "Start cat coding session",
-        "category": "Cat Coding"
+        "command": "turbopilot.start",
+        "title": "Start turbopilot session",
+        "category": "Turbopilot"
       },
       {
-        "command": "catCoding.doRefactor",
+        "command": "turbopilot.doRefactor",
         "title": "Do some refactoring",
-        "category": "Cat Coding"
+        "category": "Turbopilot"
       }
     ],
     "configuration": {
@@ -49,7 +49,8 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "lint": "eslint . --ext .ts,.tsx",
-    "watch": "tsc -w -p ./"
+    "watch": "tsc -w -p ./",
+    "inst": "tsc -p ./ && vsce package -o ./out.vsix && code --install-extension out.vsix --force"
   },
   "devDependencies": {
     "@types/node": "^18.8.5",
@@ -58,6 +59,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "eslint": "^8.13.0",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "vsce": "^2.11.0"
   }
 }

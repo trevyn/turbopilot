@@ -10,13 +10,13 @@ export function activate(context: vscode.ExtensionContext) {
   console.log(vscode.workspace.getConfiguration("turbopilot").openaiApiKey);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("catCoding.start", () => {
+    vscode.commands.registerCommand("turbopilot.start", () => {
       CatCodingPanel.createOrShow(context.extensionUri);
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("catCoding.doRefactor", () => {
+    vscode.commands.registerCommand("turbopilot.doRefactor", () => {
       if (CatCodingPanel.currentPanel) {
         CatCodingPanel.currentPanel.doRefactor();
       }
