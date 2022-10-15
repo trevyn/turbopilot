@@ -12,6 +12,13 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
       CatCodingPanel.createOrShow(context.extensionUri);
+      let activeEditor = vscode.window.activeTextEditor;
+      let document = activeEditor?.document;
+      let curPos = activeEditor?.selection.active;
+      if (curPos) {
+        let offset = document?.offsetAt(curPos);
+        console.log(offset);
+      }
     })
   );
 
@@ -71,7 +78,7 @@ class CatCodingPanel {
 
     // If we already have a panel, show it.
     if (CatCodingPanel.currentPanel) {
-      CatCodingPanel.currentPanel._panel.reveal(column);
+      // CatCodingPanel.currentPanel._panel.reveal(); // (column)
       return;
     }
 
