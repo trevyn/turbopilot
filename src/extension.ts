@@ -11,6 +11,10 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("turbopilot.start", () => {
       CatCodingPanel.createOrShow(context.extensionUri);
 
+      if (CatCodingPanel.currentPanel) {
+        CatCodingPanel.currentPanel.doLoading();
+      }
+
       let activeEditor = vscode.window.activeTextEditor;
       let document = activeEditor?.document;
       let text = document?.getText();
@@ -38,10 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
             return;
           }
 
-          for (let i = 0; i < 64; i++) {
-            console.log(completion.data.choices[i].text);
-          }
-
           // Send completions to webview
           if (CatCodingPanel) {
             CatCodingPanel.currentPanel?.doUpdateCompletions(completion.data);
@@ -56,14 +56,6 @@ export function activate(context: vscode.ExtensionContext) {
           }
         }
       })();
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("turbopilot.doRefactor", () => {
-      if (CatCodingPanel.currentPanel) {
-        CatCodingPanel.currentPanel.doRefactor();
-      }
     })
   );
 
@@ -170,10 +162,8 @@ class CatCodingPanel {
     );
   }
 
-  public doRefactor() {
-    // Send a message to the webview webview.
-    // You can send any JSON serializable data.
-    this._panel.webview.postMessage({ command: "refactor" });
+  public doLoading() {
+    this._panel.webview.postMessage({ command: "loading" });
   }
 
   public doUpdateCompletions(completions: CreateCompletionResponse) {
@@ -255,7 +245,7 @@ class CatCodingPanel {
 			</head>
 			<body>
 				<img src="${catGifPath}" width="300" />
-				<h1 id="lines-of-code-counter">0</h1>
+				<pre id="lines-of-code-counter">0</pre>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>

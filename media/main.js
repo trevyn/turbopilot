@@ -36,13 +36,21 @@
   window.addEventListener("message", (event) => {
     const message = event.data; // The json data that the extension sent
     switch (message.command) {
-      // case "refactor":
-      //   currentCount = Math.ceil(currentCount * 0.5);
-      //   counter.textContent = `${currentCount}`;
-      //   break;
+      case "loading":
+        counter.textContent = "loading...";
+        break;
       case "update-completions":
-        currentCount = Math.ceil(currentCount * 0.5);
-        counter.textContent = JSON.stringify(message);
+        // counter.textContent = JSON.stringify(message);
+
+        let string = JSON.stringify(message.completions.usage);
+        string += "\n";
+
+        for (let i = 0; i < 64; i++) {
+          string += `\n${message.completions.choices[i].text}`;
+        }
+
+        counter.textContent = string;
+
         break;
     }
   });
