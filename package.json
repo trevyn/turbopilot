@@ -10,7 +10,7 @@
     "url": "https://github.com/Microsoft/vscode-extension-samples"
   },
   "engines": {
-    "vscode": "^1.71.0"
+    "vscode": "^1.72.0"
   },
   "categories": [
     "Other"
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.8.5",
-    "@types/vscode": "^1.71.0",
+    "@types/vscode": "^1.72.0",
     "@types/vscode-webview": "^1.57.0",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
