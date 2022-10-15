@@ -4,4 +4,4 @@ Make a Turbopilot. It provides AI-generated text completions while coding. It do
 
 Fetches list of completions.
 
-Gets vscode Document object and cursor position.
+Gets completions.

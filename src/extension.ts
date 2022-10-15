@@ -1,4 +1,10 @@
 import * as vscode from "vscode";
+import { Configuration, OpenAIApi } from "openai";
+
+const configuration = new Configuration({
+  apiKey: vscode.workspace.getConfiguration("turbopilot").openaiApiKey,
+});
+const openai = new OpenAIApi(configuration);
 
 const cats = {
   "Coding Cat": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
@@ -7,18 +13,50 @@ const cats = {
 };
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log(vscode.workspace.getConfiguration("turbopilot").openaiApiKey);
-
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
       CatCodingPanel.createOrShow(context.extensionUri);
+
       let activeEditor = vscode.window.activeTextEditor;
       let document = activeEditor?.document;
+      let text = document?.getText();
       let curPos = activeEditor?.selection.active;
-      if (curPos) {
-        let offset = document?.offsetAt(curPos);
-        console.log(offset);
-      }
+      if (!curPos || !text) return;
+      let offset = document?.offsetAt(curPos);
+      if (!offset) return;
+      const documentPrefix = text.substr(0, offset);
+      const documentSuffix = text.substr(offset);
+
+      (async () => {
+        try {
+          const completion = await openai.createCompletion({
+            model: "code-davinci-002",
+            prompt: documentPrefix,
+            suffix: documentSuffix,
+            max_tokens: 50,
+            temperature: 1,
+            // logprobs: 0,
+            n: 64,
+          });
+
+          if (!completion.data.choices) {
+            console.log("no completions");
+            return;
+          }
+
+          for (let i = 0; i < 64; i++) {
+            console.log(completion.data.choices[i].text);
+          }
+        } catch (e: any) {
+          console.log("error!");
+          if (e.response) {
+            console.log(e.response.status);
+            console.log(JSON.stringify(e.response.data));
+          } else {
+            console.log(e.message);
+          }
+        }
+      })();
     })
   );
 
