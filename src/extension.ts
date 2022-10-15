@@ -138,15 +138,15 @@ class CatCodingPanel {
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
     // Update the content based on view changes
-    this._panel.onDidChangeViewState(
-      (e) => {
-        if (this._panel.visible) {
-          this._update();
-        }
-      },
-      null,
-      this._disposables
-    );
+    // this._panel.onDidChangeViewState(
+    //   (e) => {
+    //     if (this._panel.visible) {
+    //       this._update();
+    //     }
+    //   },
+    //   null,
+    //   this._disposables
+    // );
 
     // Handle messages from the webview
     this._panel.webview.onDidReceiveMessage(
@@ -245,7 +245,7 @@ class CatCodingPanel {
 			</head>
 			<body>
 				<img src="${catGifPath}" width="300" />
-				<pre id="lines-of-code-counter">0</pre>
+				<div id="maindiv">0</div>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>

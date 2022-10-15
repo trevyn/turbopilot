@@ -8,13 +8,13 @@
     vscode.getState()
   );
 
-  const counter = /** @type {HTMLElement} */ (
-    document.getElementById("lines-of-code-counter")
+  const maindiv = /** @type {HTMLElement} */ (
+    document.getElementById("maindiv")
   );
   console.log("Initial state", oldState);
 
   let currentCount = (oldState && oldState.count) || 0;
-  counter.textContent = `${currentCount}`;
+  maindiv.textContent = `${currentCount}`;
 
   // setInterval(() => {
   //   counter.textContent = `${currentCount++} `;
@@ -37,20 +37,34 @@
     const message = event.data; // The json data that the extension sent
     switch (message.command) {
       case "loading":
-        counter.textContent = "loading...";
+        maindiv.textContent = "loading...";
+        maindiv.style.backgroundColor = "red";
+        maindiv.style.color = "black";
+        maindiv.style.fontSize = "22px";
         break;
       case "update-completions":
         // counter.textContent = JSON.stringify(message);
 
-        let string = JSON.stringify(message.completions.usage);
-        string += "\n";
+        maindiv.style.fontSize = "22px";
+        maindiv.style.backgroundColor = "black";
+        maindiv.style.color = "white";
+        maindiv.textContent = JSON.stringify(message.completions.usage);
 
-        for (let i = 0; i < 64; i++) {
-          string += `\n${message.completions.choices[i].text}`;
+        for (let i = 0; i < message.completions.choices.length; i++) {
+          const tempDiv = document.createElement("pre");
+          tempDiv.style.backgroundColor = "#222";
+          tempDiv.style.fontSize = "14px";
+          // set hand cursor
+          tempDiv.style.cursor = "pointer";
+          tempDiv.onmouseover = (event) => {
+            tempDiv.style.backgroundColor = "#111";
+          };
+          tempDiv.onmouseout = (event) => {
+            tempDiv.style.backgroundColor = "#222";
+          };
+          tempDiv.textContent = message.completions.choices[i].text;
+          maindiv.insertAdjacentElement("afterend", tempDiv);
         }
-
-        counter.textContent = string;
-
         break;
     }
   });

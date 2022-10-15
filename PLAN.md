@@ -2,10 +2,12 @@
 
 Make a Turbopilot. It provides AI-generated text completions while coding. It does this by understanding the current plan and the text editing context.
 
-Format completions nicely in the webview.
+Make slightly more nicely formatted suggestions.
 
-Decode the JSON.
+Thin separation line between suggestions.
 
-Convert the completions to plain text.
+Instead of one big <pre> tag, use a series of <div> tags.
 
-Provide feedback and a timer when completions requested
+Instead of element.textContent, use element.innerHTML
+
+We have to encode the HTML entity characters with  for safety.
