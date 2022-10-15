@@ -48,11 +48,14 @@ export function activate(context: vscode.ExtensionContext) {
           }
         } catch (e: any) {
           console.log("error!");
+          vscode.window.showErrorMessage("OpenAI API error, check console.log");
           if (e.response) {
             console.log(e.response.status);
             console.log(JSON.stringify(e.response.data));
+            vscode.window.showErrorMessage(JSON.stringify(e.response.data));
           } else {
             console.log(e.message);
+            vscode.window.showErrorMessage(e.message);
           }
         }
       })();
