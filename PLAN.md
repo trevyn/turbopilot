@@ -2,4 +2,4 @@
 
 Make a Turbopilot. It provides AI-generated text completions while coding. It does this by understanding the current plan and the text editing context.
 
-insert completion into the code
+???

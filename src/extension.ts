@@ -9,10 +9,10 @@ const openai = new OpenAIApi(configuration);
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
-      CatCodingPanel.createOrShow(context.extensionUri);
+      TurbopilotPanel.createOrShow(context.extensionUri);
 
-      if (CatCodingPanel.currentPanel) {
-        CatCodingPanel.currentPanel.doLoading();
+      if (TurbopilotPanel.currentPanel) {
+        TurbopilotPanel.currentPanel.doLoading();
       }
 
       let activeEditor = vscode.window.activeTextEditor;
@@ -43,8 +43,8 @@ export function activate(context: vscode.ExtensionContext) {
           }
 
           // Send completions to webview
-          if (CatCodingPanel) {
-            CatCodingPanel.currentPanel?.doUpdateCompletions(completion.data);
+          if (TurbopilotPanel) {
+            TurbopilotPanel.currentPanel?.doUpdateCompletions(completion.data);
           }
         } catch (e: any) {
           console.log("error!");
@@ -64,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   if (vscode.window.registerWebviewPanelSerializer) {
     // Make sure we register a serializer in activation event
-    vscode.window.registerWebviewPanelSerializer(CatCodingPanel.viewType, {
+    vscode.window.registerWebviewPanelSerializer(TurbopilotPanel.viewType, {
       async deserializeWebviewPanel(
         webviewPanel: vscode.WebviewPanel,
         state: any
@@ -72,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
         console.log(`Got state: ${state}`);
         // Reset the webview options so we use latest uri for `localResourceRoots`.
         webviewPanel.webview.options = getWebviewOptions(context.extensionUri);
-        CatCodingPanel.revive(webviewPanel, context.extensionUri);
+        TurbopilotPanel.revive(webviewPanel, context.extensionUri);
       },
     });
   }
@@ -88,16 +88,13 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
   };
 }
 
-/**
- * Manages cat coding webview panels
- */
-class CatCodingPanel {
+class TurbopilotPanel {
   /**
-   * Track the currently panel. Only allow a single panel to exist at a time.
+   * Track the current panel. Only allow a single panel to exist at a time.
    */
-  public static currentPanel: CatCodingPanel | undefined;
+  public static currentPanel: TurbopilotPanel | undefined;
 
-  public static readonly viewType = "catCoding";
+  public static readonly viewType = "turbopilot";
 
   private readonly _panel: vscode.WebviewPanel;
   private readonly _extensionUri: vscode.Uri;
@@ -109,24 +106,24 @@ class CatCodingPanel {
       : undefined;
 
     // If we already have a panel, show it.
-    if (CatCodingPanel.currentPanel) {
-      // CatCodingPanel.currentPanel._panel.reveal(); // (column)
+    if (TurbopilotPanel.currentPanel) {
+      // TurbopilotPanel.currentPanel._panel.reveal(); // (column)
       return;
     }
 
     // Otherwise, create a new panel.
     const panel = vscode.window.createWebviewPanel(
-      CatCodingPanel.viewType,
+      TurbopilotPanel.viewType,
       "Turbopilot",
       column || vscode.ViewColumn.One,
       getWebviewOptions(extensionUri)
     );
 
-    CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
+    TurbopilotPanel.currentPanel = new TurbopilotPanel(panel, extensionUri);
   }
 
   public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-    CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
+    TurbopilotPanel.currentPanel = new TurbopilotPanel(panel, extensionUri);
   }
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -187,7 +184,7 @@ class CatCodingPanel {
   }
 
   public dispose() {
-    CatCodingPanel.currentPanel = undefined;
+    TurbopilotPanel.currentPanel = undefined;
 
     // Clean up our resources
     this._panel.dispose();
@@ -200,7 +197,7 @@ class CatCodingPanel {
     }
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
+  private _getHtmlForWebview(webview: vscode.Webview, gifPath: string) {
     // Local path to main script run in the webview
     const scriptPathOnDisk = vscode.Uri.joinPath(
       this._extensionUri,
@@ -249,7 +246,7 @@ class CatCodingPanel {
 				<title>Turbopilot</title>
 			</head>
 			<body>
-				<img src="${catGifPath}" width="300" />
+				<img src="${gifPath}" width="300" />
 				<div id="maindiv">0</div>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>

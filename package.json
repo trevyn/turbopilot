@@ -19,14 +19,14 @@
   "activationEvents": [
     "onCommand:turbopilot.start",
     "onCommand:turbopilot.doRefactor",
-    "onWebviewPanel:catCoding"
+    "onWebviewPanel:turbopilot"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "turbopilot.start",
-        "title": "Start turbopilot session",
+        "title": "Start Turbopilot session",
         "category": "Turbopilot"
       },
       {
