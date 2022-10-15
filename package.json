@@ -35,9 +35,9 @@
       }
     ],
     "configuration": {
-      "title": "Creatrix",
+      "title": "Turbopilot",
       "properties": {
-        "creatrix.openaiApiKey": {
+        "turbopilot.openaiApiKey": {
           "title": "OpenAI API Key",
           "description": "Your Codex-enabled OpenAI API Key",
           "type": "string"

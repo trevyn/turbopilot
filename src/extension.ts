@@ -7,7 +7,7 @@ const cats = {
 };
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log(vscode.workspace.getConfiguration("creatrix").openaiApiKey);
+  console.log(vscode.workspace.getConfiguration("turbopilot").openaiApiKey);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("catCoding.start", () => {
