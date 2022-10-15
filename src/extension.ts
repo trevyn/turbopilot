@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
 
 const configuration = new Configuration({
   apiKey: vscode.workspace.getConfiguration("turbopilot").openaiApiKey,
@@ -46,6 +46,11 @@ export function activate(context: vscode.ExtensionContext) {
 
           for (let i = 0; i < 64; i++) {
             console.log(completion.data.choices[i].text);
+          }
+
+          // Send completions to webview
+          if (CatCodingPanel) {
+            CatCodingPanel.currentPanel?.doUpdateCompletions(completion.data);
           }
         } catch (e: any) {
           console.log("error!");
@@ -175,6 +180,13 @@ class CatCodingPanel {
     // Send a message to the webview webview.
     // You can send any JSON serializable data.
     this._panel.webview.postMessage({ command: "refactor" });
+  }
+
+  public doUpdateCompletions(completions: CreateCompletionResponse) {
+    this._panel.webview.postMessage({
+      command: "update-completions",
+      completions,
+    });
   }
 
   public dispose() {

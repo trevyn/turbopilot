@@ -51,7 +51,7 @@
     "compile": "tsc -p ./",
     "lint": "eslint . --ext .ts,.tsx",
     "watch": "tsc -w -p ./",
-    "inst": "tsc -p ./ && vsce package -o ./out.vsix && code --install-extension out.vsix --force"
+    "inst": "vsce package -o ./out.vsix && code --install-extension out.vsix --force"
   },
   "devDependencies": {
     "@types/node": "^18.8.5",

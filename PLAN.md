@@ -2,6 +2,6 @@
 
 Make a Turbopilot. It provides AI-generated text completions while coding. It does this by understanding the current plan and the text editing context.
 
-Fetches list of completions.
+Displays completions in vscode webview using postMessage.
 
-Gets completions.
+Understand postMessage usage.
