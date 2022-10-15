@@ -36,10 +36,6 @@
         maindiv.style.color = "white";
         maindiv.textContent = JSON.stringify(message.completions.usage);
 
-        const tempDiv = document.createElement("pre");
-        tempDiv.style.borderTop = "10px solid white";
-        maindiv.insertAdjacentElement("afterend", tempDiv);
-
         for (let i = 0; i < message.completions.choices.length; i++) {
           const tempDiv = document.createElement("pre");
           tempDiv.style.backgroundColor = "#222";
@@ -60,7 +56,7 @@
           };
 
           tempDiv.textContent = message.completions.choices[i].text;
-          maindiv.insertAdjacentElement("afterend", tempDiv);
+          maindiv.appendChild(tempDiv);
         }
         break;
     }
