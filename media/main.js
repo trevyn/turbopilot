@@ -15,22 +15,10 @@
 
   let currentCount = (oldState && oldState.count) || 0;
   maindiv.textContent = `${currentCount}`;
-
-  // setInterval(() => {
-  //   counter.textContent = `${currentCount++} `;
+  maindiv.style.fontSize = "22px";
 
   //   // Update state
   //   vscode.setState({ count: currentCount });
-
-  //   // Alert the extension when the cat introduces a bug
-  //   if (Math.random() < Math.min(0.001 * currentCount, 0.05)) {
-  //     // Send a message back to the extension
-  //     // vscode.postMessage({
-  //     //     command: 'alert',
-  //     //     text: '🐛  on line ' + currentCount
-  //     // });
-  //   }
-  // }, 100);
 
   // Handle messages sent from the extension to the webview
   window.addEventListener("message", (event) => {
@@ -40,12 +28,10 @@
         maindiv.textContent = "loading...";
         maindiv.style.backgroundColor = "red";
         maindiv.style.color = "black";
-        maindiv.style.fontSize = "22px";
         break;
       case "update-completions":
         // counter.textContent = JSON.stringify(message);
 
-        maindiv.style.fontSize = "22px";
         maindiv.style.backgroundColor = "black";
         maindiv.style.color = "white";
         maindiv.textContent = JSON.stringify(message.completions.usage);
@@ -54,7 +40,7 @@
           const tempDiv = document.createElement("pre");
           tempDiv.style.backgroundColor = "#222";
           tempDiv.style.fontSize = "14px";
-          // set hand cursor
+          tempDiv.style.borderTop = "1px solid white";
           tempDiv.style.cursor = "pointer";
           tempDiv.onmouseover = (event) => {
             tempDiv.style.backgroundColor = "#111";
@@ -62,6 +48,13 @@
           tempDiv.onmouseout = (event) => {
             tempDiv.style.backgroundColor = "#222";
           };
+          tempDiv.onclick = (event) => {
+            vscode.postMessage({
+              command: "insert-text",
+              text: message.completions.choices[i].text,
+            });
+          };
+
           tempDiv.textContent = message.completions.choices[i].text;
           maindiv.insertAdjacentElement("afterend", tempDiv);
         }

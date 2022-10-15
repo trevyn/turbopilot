@@ -114,7 +114,7 @@ class CatCodingPanel {
     // Otherwise, create a new panel.
     const panel = vscode.window.createWebviewPanel(
       CatCodingPanel.viewType,
-      "Cat Coding",
+      "Turbopilot",
       column || vscode.ViewColumn.One,
       getWebviewOptions(extensionUri)
     );
@@ -130,8 +130,10 @@ class CatCodingPanel {
     this._panel = panel;
     this._extensionUri = extensionUri;
 
-    // Set the webview's initial html content
-    this._update();
+    this._panel.webview.html = this._getHtmlForWebview(
+      this._panel.webview,
+      "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+    );
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
@@ -154,6 +156,14 @@ class CatCodingPanel {
         switch (message.command) {
           case "alert":
             vscode.window.showErrorMessage(message.text);
+            return;
+          case "insert-text":
+            const editor = vscode.window.activeTextEditor;
+            if (editor) {
+              editor.edit((editBuilder) => {
+                editBuilder.insert(editor.selection.active, message.text);
+              });
+            }
             return;
         }
       },
@@ -185,14 +195,6 @@ class CatCodingPanel {
         x.dispose();
       }
     }
-  }
-
-  private _update() {
-    this._panel.title = "Turbopilot";
-    this._panel.webview.html = this._getHtmlForWebview(
-      this._panel.webview,
-      "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
-    );
   }
 
   private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
