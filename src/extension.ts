@@ -6,12 +6,6 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const cats = {
-  "Coding Cat": "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
-  "Compiling Cat": "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
-  "Testing Cat": "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
-};
-
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
@@ -204,28 +198,11 @@ class CatCodingPanel {
   }
 
   private _update() {
-    const webview = this._panel.webview;
-
-    // Vary the webview's content based on where it is located in the editor.
-    switch (this._panel.viewColumn) {
-      case vscode.ViewColumn.Two:
-        this._updateForCat(webview, "Compiling Cat");
-        return;
-
-      case vscode.ViewColumn.Three:
-        this._updateForCat(webview, "Testing Cat");
-        return;
-
-      case vscode.ViewColumn.One:
-      default:
-        this._updateForCat(webview, "Coding Cat");
-        return;
-    }
-  }
-
-  private _updateForCat(webview: vscode.Webview, catName: keyof typeof cats) {
-    this._panel.title = catName;
-    this._panel.webview.html = this._getHtmlForWebview(webview, cats[catName]);
+    this._panel.title = "Turbopilot";
+    this._panel.webview.html = this._getHtmlForWebview(
+      this._panel.webview,
+      "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+    );
   }
 
   private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
@@ -274,7 +251,7 @@ class CatCodingPanel {
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
 
-				<title>Cat Coding</title>
+				<title>Turbopilot</title>
 			</head>
 			<body>
 				<img src="${catGifPath}" width="300" />
