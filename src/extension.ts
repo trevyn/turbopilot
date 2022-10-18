@@ -22,6 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (!curPos || !text) return;
       let offset = document?.offsetAt(curPos);
       if (!offset) return;
+      TurbopilotPanel.invocationEditor = activeEditor;
       const documentPrefix = text.substr(0, offset);
       const documentSuffix = text.substr(offset);
 
@@ -93,6 +94,7 @@ class TurbopilotPanel {
    * Track the current panel. Only allow a single panel to exist at a time.
    */
   public static currentPanel: TurbopilotPanel | undefined;
+  public static invocationEditor: vscode.TextEditor | undefined;
 
   public static readonly viewType = "turbopilot";
 
@@ -158,7 +160,9 @@ class TurbopilotPanel {
             vscode.window.showErrorMessage(message.text);
             return;
           case "insert-text":
-            const editor = vscode.window.activeTextEditor;
+            const editor =
+              vscode.window.activeTextEditor ??
+              TurbopilotPanel.invocationEditor;
             if (editor) {
               editor.edit((editBuilder) => {
                 editBuilder.insert(editor.selection.active, message.text);
