@@ -132,10 +132,7 @@ class TurbopilotPanel {
     this._panel = panel;
     this._extensionUri = extensionUri;
 
-    this._panel.webview.html = this._getHtmlForWebview(
-      this._panel.webview,
-      "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
-    );
+    this._panel.webview.html = this._getHtmlForWebview(this._panel.webview);
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programmatically
@@ -201,7 +198,7 @@ class TurbopilotPanel {
     }
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview, gifPath: string) {
+  private _getHtmlForWebview(webview: vscode.Webview) {
     // Local path to main script run in the webview
     const scriptPathOnDisk = vscode.Uri.joinPath(
       this._extensionUri,
@@ -250,9 +247,7 @@ class TurbopilotPanel {
 				<title>Turbopilot</title>
 			</head>
 			<body>
-				<img src="${gifPath}" width="300" />
 				<div id="maindiv">0</div>
-
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;
