@@ -47,6 +47,7 @@
     }
   },
   "scripts": {
+    "wasm": "cargo build --lib --target wasm32-unknown-unknown && wasm-bindgen --out-dir src-extension/turbocharger_generated --out-name index --target nodejs target/wasm32-unknown-unknown/debug/turbocharger_generated.wasm",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "lint": "eslint . --ext .ts,.tsx",
