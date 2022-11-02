@@ -1,12 +1,16 @@
 import * as vscode from "vscode";
 import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
 
+let myNative = require("my-native");
+
 const configuration = new Configuration({
   apiKey: vscode.workspace.getConfiguration("turbopilot").openaiApiKey,
 });
 const openai = new OpenAIApi(configuration);
 
 export function activate(context: vscode.ExtensionContext) {
+  vscode.window.showErrorMessage(myNative.hello());
+
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
       TurbopilotPanel.createOrShow(context.extensionUri);

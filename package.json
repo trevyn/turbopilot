@@ -64,6 +64,7 @@
     "vsce": "^2.11.0"
   },
   "dependencies": {
-    "openai": "^3.0.0"
+    "my-native": "file:my-native",
+    "openai": "3.0.0"
   }
 }
