@@ -64,7 +64,7 @@
     "vsce": "^2.11.0"
   },
   "dependencies": {
-    "my-native": "file:my-native",
+    "turbocharger-generated": "file:src-extension/turbocharger_generated",
     "openai": "3.0.0"
   }
 }
