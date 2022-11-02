@@ -10,8 +10,11 @@ mod app;
 #[tokio::main(flavor = "multi_thread", worker_threads = 10)]
 #[tracked]
 async fn main() -> Result<(), tracked::StringError> {
-	let native_options = eframe::NativeOptions::default();
-	eframe::run_native("turbopilot", native_options, Box::new(|cc| Box::new(MyEguiApp::new(cc))));
+	eframe::run_native(
+		"turbopilot",
+		eframe::NativeOptions { always_on_top: true, ..Default::default() },
+		Box::new(|cc| Box::new(MyEguiApp::new(cc))),
+	);
 
 	Ok(())
 }
