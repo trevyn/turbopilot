@@ -10,6 +10,18 @@ mod app;
 #[tokio::main(flavor = "multi_thread", worker_threads = 10)]
 #[tracked]
 async fn main() -> Result<(), tracked::StringError> {
+	let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 18493));
+
+	let app =
+		axum::Router::new().route("/turbocharger_socket", axum::routing::get(turbocharger::ws_handler));
+
+	tokio::spawn(async move {
+		axum::Server::bind(&addr)
+			.serve(app.into_make_service_with_connect_info::<std::net::SocketAddr>())
+			.await
+			.unwrap();
+	});
+
 	eframe::run_native(
 		"turbopilot",
 		eframe::NativeOptions { always_on_top: true, ..Default::default() },
