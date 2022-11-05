@@ -1,19 +1,32 @@
 #![forbid(unsafe_code)]
-#![allow(non_camel_case_types, non_snake_case)]
-#![cfg_attr(feature = "wasm", allow(dead_code))]
+// #![allow(non_camel_case_types, non_snake_case)]
+// #![cfg_attr(feature = "wasm", allow(dead_code))]
 
 use eframe::egui;
-use turbocharger::prelude::*;
+use std::{net::SocketAddr, sync::Mutex};
+use tracked::tracked;
 
-mod app;
+use axum::{
+	body::{boxed, Full},
+	extract::{
+		ws::{Message, WebSocket, WebSocketUpgrade},
+		ConnectInfo, TypedHeader,
+	},
+	headers,
+	http::{header, header::HeaderMap, StatusCode, Uri},
+	response::{IntoResponse, Response},
+	routing::{get, Router},
+	Server,
+};
+
+static VISIBLE: Mutex<bool> = Mutex::new(false);
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 10)]
 #[tracked]
 async fn main() -> Result<(), tracked::StringError> {
 	let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 18493));
 
-	let app =
-		axum::Router::new().route("/turbocharger_socket", axum::routing::get(turbocharger::ws_handler));
+	let app = axum::Router::new().route("/turbocharger_socket", axum::routing::get(ws_handler));
 
 	tokio::spawn(async move {
 		axum::Server::bind(&addr)
@@ -31,6 +44,24 @@ async fn main() -> Result<(), tracked::StringError> {
 	Ok(())
 }
 
+pub async fn ws_handler(
+	ws: WebSocketUpgrade,
+	user_agent: Option<TypedHeader<headers::UserAgent>>,
+	ConnectInfo(addr): ConnectInfo<SocketAddr>,
+) -> impl IntoResponse {
+	eprintln!("websocket connecting from {}", addr);
+
+	let ua_str =
+		if let Some(TypedHeader(ua)) = user_agent { ua.as_str().into() } else { String::new() };
+
+	ws.on_upgrade(move |ws| handle_socket(ws, ua_str, addr))
+}
+
+async fn handle_socket(ws: WebSocket, ua: String, addr: SocketAddr) {
+	eprintln!("websocket connected");
+	*VISIBLE.lock().unwrap() = true;
+}
+
 #[derive(Default)]
 struct MyEguiApp {}
 
@@ -46,6 +77,7 @@ impl MyEguiApp {
 
 impl eframe::App for MyEguiApp {
 	fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+		frame.set_visible(*VISIBLE.lock().unwrap());
 		egui::CentralPanel::default().show(ctx, |ui| {
 			ui.heading("Hello World!");
 		});

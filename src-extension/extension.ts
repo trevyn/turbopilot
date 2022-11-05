@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import { Configuration, OpenAIApi, CreateCompletionResponse } from "openai";
-
-import * as backend from "turbocharger-generated";
-// let backend = require("turbocharger_generated");
+import * as WebSocket from "ws";
 
 // let myNative = require("my-native");
 // let x = myNative.parse_async();
@@ -13,19 +11,12 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export function activate(context: vscode.ExtensionContext) {
-  // let prom = turbocharger_init().then(async () => {
-  backend.set_socket_url("ws://127.0.0.1:8080/turbocharger_socket");
-  backend.do_test();
-  // });
-
-  // (async () => {
-  //   await prom;
-  // })();
-
   // vscode.window.showErrorMessage(myNative.hello());
 
   context.subscriptions.push(
     vscode.commands.registerCommand("turbopilot.start", () => {
+      let socket = new WebSocket("ws://127.0.0.1:18493/turbocharger_socket");
+
       TurbopilotPanel.createOrShow(context.extensionUri);
 
       if (TurbopilotPanel.currentPanel) {
